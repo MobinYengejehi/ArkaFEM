@@ -1,0 +1,13 @@
+%SMOKEARKAFEM Verify import and metadata; not a FEM benchmark.
+run(fullfile(fileparts(mfilename('fullpath')), 'setupArkaFEM.m'));
+arkaSmokeLocated = which('arka.version');
+assert(~isempty(arkaSmokeLocated), 'arka:qa:ImportFailed', ...
+    'MATLAB cannot resolve arka.version.');
+arkaSmokeInfo = arka.version();
+assert(arkaSmokeInfo.Name == "ArkaFEM", 'arka:qa:SmokeFailed', ...
+    'Unexpected package metadata.');
+assert(arkaSmokeInfo.Version == "0.0.1-dev", 'arka:qa:SmokeFailed', ...
+    'Metadata does not match VERSION.');
+fprintf('ArkaFEM bootstrap smoke PASS: %s (%s)\n', ...
+    char(arkaSmokeInfo.Name), char(arkaSmokeInfo.Version));
+clear arkaSmokeLocated arkaSmokeInfo

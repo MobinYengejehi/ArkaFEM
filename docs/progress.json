@@ -1,0 +1,111 @@
+{
+  "project": "ArkaFEM",
+  "schema_version": 2,
+  "as_of_utc": "2026-11-14",
+  "version": "0.0.1-dev",
+  "current_stage": "01",
+  "current_step": "01A",
+  "baseline_prompt_kit_sha256": "de67866ad9fd28d1094a198fda995af9db8425a76dd06518bc4a34693eae1e2c",
+  "stage_weights_pct": {
+    "01": 8,
+    "02": 15,
+    "03": 20,
+    "04": 15,
+    "05": 12,
+    "06": 15,
+    "07": 10,
+    "08": 5
+  },
+  "stage01_tasks": [
+    {
+      "id": "S01.01",
+      "weight": 10,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "scaffold exists; .prj not generated or MATLAB opened"
+    },
+    {
+      "id": "S01.02",
+      "weight": 15,
+      "implemented_accepted": true,
+      "verified_accepted": true,
+      "verification_basis": "static documentation inspection; no MATLAB execution",
+      "notes": "architecture, NC, API spec and ADR written; static docs reviewed"
+    },
+    {
+      "id": "S01.03",
+      "weight": 15,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "not started at 01A"
+    },
+    {
+      "id": "S01.04",
+      "weight": 10,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "not started at 01A"
+    },
+    {
+      "id": "S01.05",
+      "weight": 10,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "not started at 01A"
+    },
+    {
+      "id": "S01.06",
+      "weight": 15,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "not started at 01A"
+    },
+    {
+      "id": "S01.07",
+      "weight": 15,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "01A unit tests authored only; MATLAB not run"
+    },
+    {
+      "id": "S01.08",
+      "weight": 5,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "01A setup/smoke/runner authored only; MATLAB not run"
+    },
+    {
+      "id": "S01.09",
+      "weight": 5,
+      "implemented_accepted": false,
+      "verified_accepted": false,
+      "verification_basis": null,
+      "notes": "partial ongoing docs and report work; not accepted"
+    }
+  ],
+  "stage01": {
+    "implemented_pct": 15,
+    "verified_pct": 15,
+    "remaining_verified_pct": 85
+  },
+  "overall": {
+    "implemented_pct": 1.2,
+    "verified_pct": 1.2,
+    "remaining_verified_pct": 98.8
+  },
+  "runtime": {
+    "MATLAB": "NOT_AVAILABLE",
+    "MATLAB_tests": "NOT_RUN",
+    "Code_Analyzer": "NOT_RUN",
+    "MATLAB_Project": "NOT_GENERATED"
+  },
+  "next_prompt": "PROMPTS/01B_PUBLIC_MODEL_FACADE_AND_VALIDATION.md",
+  "progress_method": "S01.01..09: accept whole weighted tasks only; overall progress = 8 * task_points /100. Docs-only verification may use static review; MATLAB-dependent verification requires MATLAB execution."
+}

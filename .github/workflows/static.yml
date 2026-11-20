@@ -1,0 +1,11 @@
+name: Static repository checks (NOT MATLAB verification)
+on:
+  push:
+  pull_request:
+jobs:
+  static-repository-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static contract audit only
+        run: python3 scripts/static_audit.py

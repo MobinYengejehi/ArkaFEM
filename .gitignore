@@ -1,0 +1,21 @@
+# MATLAB temporary / generated files
+*.asv
+*.autosave
+*.m~
+*.mlx.autosave
+slprj/
+codegen/
+cache/
+build/
+dist/
+out/
+logs/
+*.log
+*.mltbx
+.DS_Store
+Thumbs.db
+# Local editor configs
+.vscode/
+.idea/
+# Do NOT ignore committed curated benchmark .mat fixtures
+# Do NOT commit secrets, proprietary section databases or MATLAB license files

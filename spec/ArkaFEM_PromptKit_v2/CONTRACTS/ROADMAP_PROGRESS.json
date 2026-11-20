@@ -1,0 +1,71 @@
+{
+  "project": "ArkaFEM",
+  "baseline": "2026-11-14",
+  "schema_version": 2,
+  "stage_weights": {
+    "01": 8,
+    "02": 15,
+    "03": 20,
+    "04": 15,
+    "05": 12,
+    "06": 15,
+    "07": 10,
+    "08": 5
+  },
+  "method": "Stage stage_weight * accepted_task_weight / stage_total_task_weight; implementation and verification tracked separately; NOT_RUN never accepted for verified.",
+  "initial_progress": {
+    "implemented_pct": 0,
+    "verified_pct": 0,
+    "remaining_verified_pct": 100
+  },
+  "stage_plan": [
+    {
+      "stage": "01",
+      "weight_pct": 8,
+      "step_count": 4,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "02",
+      "weight_pct": 15,
+      "step_count": 4,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "03",
+      "weight_pct": 20,
+      "step_count": 4,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "04",
+      "weight_pct": 15,
+      "step_count": 4,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "05",
+      "weight_pct": 12,
+      "step_count": 4,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "06",
+      "weight_pct": 15,
+      "step_count": 5,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "07",
+      "weight_pct": 10,
+      "step_count": 3,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    },
+    {
+      "stage": "08",
+      "weight_pct": 5,
+      "step_count": 3,
+      "step_weights": "equal within stage except Stage 01 retains original S01.01..09 weighted acceptance"
+    }
+  ]
+}
