@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Verify SHA-256 source file manifest, excluding the manifest itself."""
 from pathlib import Path
+import argparse
 import hashlib
 import sys
 
@@ -16,6 +17,10 @@ def included(path):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Verify SHA-256 source manifest.')
+    parser.add_argument('--allow-unlisted', action='store_true',
+                        help='Allow locally generated project files not in baseline manifest.')
+    args = parser.parse_args()
     try:
         lines = MANIFEST.read_text(encoding='utf-8').splitlines()
     except FileNotFoundError:
@@ -40,7 +45,8 @@ def main():
     problems = []
     for name in sorted(set(expected) | set(actual)):
         if name not in expected:
-            problems.append(f'untracked: {name}')
+            if not args.allow_unlisted:
+                problems.append(f'untracked: {name}')
         elif name not in actual:
             problems.append(f'missing: {name}')
         elif expected[name] != actual[name]:
@@ -49,7 +55,8 @@ def main():
         for problem in problems:
             print('FAIL:', problem, file=sys.stderr)
         return 1
-    print(f'PASS: {len(expected)} SHA-256 source files match manifest; manifest itself excluded.')
+    print(f'PASS: {len(expected)} SHA-256 source files match manifest; manifest itself excluded.'
+          + (' Unlisted local files allowed.' if args.allow_unlisted else ''))
     return 0
 
 

@@ -1,10 +1,10 @@
 {
   "project": "ArkaFEM",
   "schema_version": 2,
-  "as_of_utc": "2026-11-14",
+  "as_of_utc": "2026-11-20",
   "version": "0.0.1-dev",
   "current_stage": "01",
-  "current_step": "01A",
+  "current_step": "01B",
   "baseline_prompt_kit_sha256": "de67866ad9fd28d1094a198fda995af9db8425a76dd06518bc4a34693eae1e2c",
   "stage_weights_pct": {
     "01": 8,
@@ -23,7 +23,7 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "scaffold exists; .prj not generated or MATLAB opened"
+      "notes": "User reports GitHub repo and MATLAB setup completed; local .prj/runtime log not supplied to author. Acceptance not proven here."
     },
     {
       "id": "S01.02",
@@ -36,18 +36,18 @@
     {
       "id": "S01.03",
       "weight": 15,
-      "implemented_accepted": false,
+      "implemented_accepted": true,
       "verified_accepted": false,
-      "verification_basis": null,
-      "notes": "not started at 01A"
+      "verification_basis": "source/static review only; MATLAB regression and negative tests NOT_RUN",
+      "notes": "Stage 01B Model registry, lookup/list, revisions and defensive snapshots implemented"
     },
     {
       "id": "S01.04",
       "weight": 10,
-      "implemented_accepted": false,
+      "implemented_accepted": true,
       "verified_accepted": false,
-      "verification_basis": null,
-      "notes": "not started at 01A"
+      "verification_basis": "source/static review only; MATLAB regression and negative tests NOT_RUN",
+      "notes": "Stage 01B strict validators and stable error IDs implemented; MATLAB test suite authored, not executed"
     },
     {
       "id": "S01.05",
@@ -71,7 +71,7 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "01A unit tests authored only; MATLAB not run"
+      "notes": "01A tests plus new 01B positive/negative MATLAB tests authored; MATLAB NOT_RUN, 01C/01D test coverage pending"
     },
     {
       "id": "S01.08",
@@ -79,7 +79,7 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "01A setup/smoke/runner authored only; MATLAB not run"
+      "notes": "setup/smoke/runner + 01B model basics example authored; MATLAB not executed in authoring environment"
     },
     {
       "id": "S01.09",
@@ -87,25 +87,26 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "partial ongoing docs and report work; not accepted"
+      "notes": "QA and patch-only reporting updated; final Stage01 gate and MATLAB evidence pending"
     }
   ],
   "stage01": {
-    "implemented_pct": 15,
+    "implemented_pct": 40,
     "verified_pct": 15,
     "remaining_verified_pct": 85
   },
   "overall": {
-    "implemented_pct": 1.2,
+    "implemented_pct": 3.2,
     "verified_pct": 1.2,
     "remaining_verified_pct": 98.8
   },
   "runtime": {
-    "MATLAB": "NOT_AVAILABLE",
+    "MATLAB": "USER_REPORTS_INSTALLED; NOT_AVAILABLE_TO_AUTHOR",
     "MATLAB_tests": "NOT_RUN",
     "Code_Analyzer": "NOT_RUN",
-    "MATLAB_Project": "NOT_GENERATED"
+    "MATLAB_Project": "USER_REPORTED_CREATED; NOT_OBSERVED"
   },
-  "next_prompt": "PROMPTS/01B_PUBLIC_MODEL_FACADE_AND_VALIDATION.md",
-  "progress_method": "S01.01..09: accept whole weighted tasks only; overall progress = 8 * task_points /100. Docs-only verification may use static review; MATLAB-dependent verification requires MATLAB execution."
+  "next_prompt": "PROMPTS/01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md",
+  "progress_method": "S01.01..09: accept whole weighted tasks only; overall progress = 8 * task_points /100. Docs-only verification may use static review; MATLAB-dependent verification requires MATLAB execution.",
+  "delivery_mode": "PATCH_ONLY_PER_USER_OVERRIDE"
 }

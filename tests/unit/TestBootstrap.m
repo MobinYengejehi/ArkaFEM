@@ -7,7 +7,8 @@ classdef TestBootstrap < matlab.unittest.TestCase
             testCase.verifyEqual(info.Version, "0.0.1-dev");
             testCase.verifyEqual(info.MATLABTarget, "R2024b+");
             testCase.verifyFalse(info.MATLABVerified);
-            testCase.verifyEqual(info.AvailableAPI, "arka.version");
+            testCase.verifyTrue(any(info.AvailableAPI == "arka.version"));
+            testCase.verifyTrue(any(info.AvailableAPI == "arka.Model"));
         end
 
         function packageParentIsUsable(testCase)

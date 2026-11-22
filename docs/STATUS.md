@@ -1,43 +1,43 @@
-# ArkaFEM implementation status — after 01A
+# ArkaFEM implementation status — after 01B
 
-- Date: 2026-11-14
-- Version: `0.0.1-dev`
-- Baseline supplied ZIP: `ArkaFEM_PromptKit_v2_StageByStage.zip`
-- Baseline SHA-256: `de67866ad9fd28d1094a198fda995af9db8425a76dd06518bc4a34693eae1e2c`
-- Stage/step: **01 / 01A**
-- Implementation state: **PARTIAL FOUNDATION** — working source files authored, MATLAB behavior unverified.
+- Date: 2026-11-20
+- Version: `0.0.1-dev`; `arka.version().Stage`: `01B`
+- Baseline source: `ArkaFEM_01A_0.0.1-dev.zip` (extracted without reconstruction)
+- Execution boundary: **Stage 01 / 01B — public Model facade and validation**
+- Delivery form: **delta ZIP only**, per user instruction overriding the original full-source-archive delivery policy; unchanged files are not re-shipped.
+- MATLAB user environment: user reports MATLAB installed and initial setup completed; **no MATLAB test log supplied or run in authoring environment**.
 
-## Evidence-based progress
+## Weighted progress (only whole accepted task weights)
 
 | Metric | Value |
 |---|---:|
-| Stage 01 implemented (accepted weighted tasks) | **15%** |
-| Stage 01 verified (docs-only static acceptance) | **15%** |
-| Overall implemented | **1.2%** |
-| Overall verified | **1.2%** |
+| Stage 01 implemented (S01.02=15 + S01.03=15 + S01.04=10) | **40%** |
+| Stage 01 verified (S01.02 documentation-only static review) | **15%** |
+| Overall implemented (`8% × 40%`) | **3.2%** |
+| Overall verified (`8% × 15%`) | **1.2%** |
 | Overall remaining verified | **98.8%** |
 
-Only S01.02 (architecture/contracts/API/ADR) is accepted as a complete **documentation** task after static review. S01.01 is partial because no genuine MATLAB Project `.prj` has been created/opened. S01.07 and S01.08 are partial because the authored MATLAB tests/setup are unrun. Other Stage 01 task weights remain zero. See machine-readable `docs/progress.json`.
+`S01.03` and `S01.04` are source-complete implementations with static inspection, **not MATLAB-verified**. `S01.01` is partial in the authoring evidence despite user-reported setup; locally generated `.prj` is preserved. `S01.05` and `S01.06` are next (01C); `S01.07–S01.09` are partial and not accepted until their gates pass. See `docs/progress.json`.
 
-## API and scope
+## Authored operational surface
 
-- Source-authored MATLAB function: `arka.version()` (metadata only; **NOT_RUN** in MATLAB).
-- Not available: `arka.Model`, Node/Material/Section APIs, DOF mapper, FEM elements, sparse solver, reactions, plots.
-- Compatibility target: MATLAB R2024b+ **unverified**; base MATLAB only is a design constraint, not runtime proven.
+- New public class `arka.Model(space,family)`; 2D or 3D Truss/Frame data-only model.
+- `addNode`, `addMaterial`, `addSection` with validated IDs/names/properties and atomic revisions.
+- `getNode`, `getMaterial`, `getSection`, sorted `listNodes`, `listMaterials`, `listSections`, `summary`, `snapshot`, `validate`.
+- Internal validation under `src/+arka/+internal/+core`, plus an independent worked material/section registry fixture.
+- **Not implemented:** DOF map, solver, assembly, element operations, reactions, RC design, rendering.
 
-## Test status
+## QA status
 
-- Python static repository contract audit: see `docs/qa/01A_REPORT.md` for executed result.
-- GNU Make target inspection/help: see QA report.
-- MATLAB version smoke, unit tests, Code Analyzer, `.prj` import: **NOT_RUN — MATLAB unavailable**.
-- CI `static.yml` not run remotely; no MATLAB CI configured; scientific verification blocked.
+- Python static repository audit: recorded in `docs/qa/01B_REPORT.md` after run.
+- SHA-256 manifest / patch delta integrity: recorded in QA and top-level patch metadata.
+- MATLAB unit tests, MATLAB Code Analyzer, project import: **NOT_RUN in authoring environment**. No MATLAB regression or structural accuracy results claimed.
+- GitHub Actions static workflow, local Git commit/push: **NOT_RUN by stage author**.
 
-## Open blockers
+## Open issues
 
-1. MATLAB unavailable in authoring environment; no valid MATLAB test log or `.prj` creation.
-2. MIT license is only proposed; owner approval needed prior to public release.
-3. API through Model and any numerical solver are outside the 01A scope.
+1. `QA-01B-001`: run `scripts/run_all_tests.m`, `scripts/run_lint.m` in local MATLAB (R2024b+ target); share release and log for verification.
+2. `QA-01B-002`: MIT license not approved; project must remain unpublished under an assumed MIT license.
+3. `QA-01B-003`: local `.prj` and optional generated MATLAB Project files absent from source ZIP; patch does not affect them; local manifest may contain extra unlisted files.
 
-## Handoff
-
-Read `docs/HANDOFF.md` and `spec/ArkaFEM_PromptKit_v2/PROMPTS/01B_PUBLIC_MODEL_FACADE_AND_VALIDATION.md`; execute 01B **only on explicit next-stage instruction**. No Git commits, tags or pushes performed.
+**Next, only upon user request:** `spec/ArkaFEM_PromptKit_v2/PROMPTS/01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md`.

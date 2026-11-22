@@ -8,9 +8,13 @@ function info = version()
     info = struct();
     info.Name = "ArkaFEM";
     info.Version = "0.0.1-dev";
-    info.Stage = "01A";
+    info.Stage = "01B";
     info.MATLABTarget = "R2024b+";
     info.MATLABVerified = false;
     info.Units = "SI";
-    info.AvailableAPI = "arka.version";
+    info.AvailableAPI = ["arka.version", "arka.Model", ...
+        "Model.addNode", "Model.addMaterial", "Model.addSection", ...
+        "Model.getNode", "Model.getMaterial", "Model.getSection", ...
+        "Model.listNodes", "Model.listMaterials", "Model.listSections", ...
+        "Model.summary", "Model.validate", "Model.snapshot"];
 end

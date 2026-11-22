@@ -1,29 +1,21 @@
-# ArkaFEM — active architecture (Stage 01A)
+# ArkaFEM — active architecture after Stage 01B
 
-Design baseline: `spec/ArkaFEM_PromptKit_v2/REFERENCES/ARCHITECTURE.md` (preserved unchanged). This active document describes the intended design without claiming unbuilt features are implemented.
+Canonical planned design: `spec/ArkaFEM_PromptKit_v2/REFERENCES/ARCHITECTURE.md`. This active status distinguishes implemented source from still-planned layers.
 
-## Layers and status
-
-| Layer | Planned responsibility | Actual at 01A |
+| Layer | Responsibility | Source status |
 |---|---|---|
-| Public facade | `arka.Model`, eventually `arka.Results` | **Planned**; only `arka.version` implemented |
-| Data registry | Nodes, materials, sections, element descriptors | Planned 01B/02 |
-| Model compiler | Kinematics, active DOF map and deterministic ordering | Planned 01C/02 |
-| Pure element kernels | Local stiffness, transformation and recovery | Planned 03+ |
-| Sparse assembly | `(I,J,V) -> sparse` triplets | Planned 02D |
-| Constraints and solver | Partitioned Dirichlet solve, reactions | Planned 01C internal proof |
+| Public facade | `arka.Model`, later `arka.Results` | `arka.Model` **implemented as data-only facade**; MATLAB runtime NOT_RUN |
+| Data registry | Nodes, material and section definitions | `Model` private struct-array registries, strict validators, deterministic ID ordering, revisioned mutation |
+| Model compiler | Deterministic active DOF mapping | Planned 01C/02 |
+| Element kernels | Local stiffness/coordinate transforms | Planned 03+ |
+| Sparse assembly | `(I,J,V) -> sparse` | Planned 02D |
+| Constraints/solver | Dirichlet and reactions | 01C manual matrix proof; general solver 02D |
 | Postprocessing | Revision-locked results | Planned |
 
-## Packaging and path
+`src/+arka` is the public namespace, with internal validation helpers under `src/+arka/+internal/+core`. `+internal` is a naming convention (not access control). The setup script adds only the parent `src` folder to the MATLAB search path. MATLAB R2024b+ compatibility is a **target** until measured.
 
-Public files belong in `src/+arka`. Source-only `src` is added with `scripts/setupArkaFEM.m`. `+internal` will be created as actual internal kernels arrive; it is a naming contract, not a security mechanism. MATLAB R2024b+ remains a test target, not verified compatibility. No additional MATLAB toolboxes are planned as core dependencies.
+Private value records provide detached external snapshots. Each successful edit increments model revision exactly once. No solver/cache exists yet, so revision-based factorization invalidation has no current computational effect. All named materials/sections and node IDs are registry-local and individually validated. `get*` and lists are data retrieval, not analysis.
 
-## Normative contracts
+The unchanged numerical contracts in `docs/NUMERICAL_CONTRACTS.md` establish SI units, future DOF families, sparse assembly, local/global matrix transforms, partitioned support solution, and reactions. No load or gravitational acceleration is implicit. The only new formula in 01B derives metadata shear modulus `G=E/(2(1+nu))` with a worked check in `docs/theory/isotropic_material_registry.md`.
 
-The canonical rules are preserved without silent modification in `docs/NUMERICAL_CONTRACTS.md`: SI units, double, fixed DOF families, sorted node IDs, global-to-local `u_l=T*u_g`, `K_g=T'K_l*T`, sparse assembly, `K_ff U_f=F_f-K_fc U_c`, reaction `R=K U-F`, no default gravity, and never solve with matrix `inv`.
-
-A sample **future** API is documented in `docs/API_SPEC.md` and must not be run at Stage 01A. Every contract change requires an ADR, migration note and tests.
-
-## Release posture
-
-Version `0.0.1-dev` is a development label. MIT is proposed but unapproved. The next release target `v0.1.0` is conditional on completed Stage 03 validation, and no engineering-certification claim is made.
+No API commitment for `addFrame`, `solveStatic`, stress/reaction, section geometry computation or numerical conditioning is made at this stage. Structural design/code checking is out of scope. MIT license is proposed but not approved.

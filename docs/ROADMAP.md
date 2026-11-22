@@ -1,34 +1,30 @@
-# ArkaFEM roadmap
+# ArkaFEM roadmap — after 01B
 
-Ground truth schedule: `spec/ArkaFEM_PromptKit_v2/CONTRACTS/ROADMAP_PROGRESS.json`. Each prompt is an independent deliverable with a mandatory stop. Planned contribution to total scope is **not** a forecast of elapsed time.
+Source of truth remains `spec/ArkaFEM_PromptKit_v2/CONTRACTS/ROADMAP_PROGRESS.json` and active `docs/progress.json`. Percent weights measure the planned scope, not calendar or effort.
 
-| Stage | Scope | Steps | Total weight |
+| Stage | Scope | Substeps | Scope weight |
 |---|---|---|---:|
-| 01 | Foundation, basic solver proof | 01A,01B,01C,01D | 8% |
-| 02 | Material/section registries, model data, sparse assembly | 02A–02D | 15% |
-| 03 | Springs, bars, 2D truss and frames, v0.1.0 target | 03A–03D | 20% |
-| 04 | 3D truss/frame, releases and offsets, v0.2.0 target | 04A–04D | 15% |
-| 05 | Loads, combinations, mass/modal, v0.3.0 target | 05A–05D | 12% |
-| 06 | Plane/plate/shell/solid elements | 06A–06E | 15% |
-| 07 | Buckling, nonlinear, transient | 07A–07C | 10% |
-| 08 | API hardening, toolbox packaging, release QA | 08A–08C | 5% |
+| 01 | Foundation, model registry, DOF / manual solver proof | 01A–01D | 8% |
+| 02 | Material/section catalogs, generalized sparse solve | 02A–02D | 15% |
+| 03 | Spring, bar, 2D truss/frame | 03A–03D | 20% |
+| 04 | 3D truss/frame and member controls | 04A–04D | 15% |
+| 05 | Loads, combinations, modal | 05A–05D | 12% |
+| 06 | Plane, plate, shell, solid | 06A–06E | 15% |
+| 07 | Geometric/nonlinear/transient | 07A–07C | 10% |
+| 08 | Hardening, Toolbox, release | 08A–08C | 5% |
 
-## Stage 01 acceptance tasks (original weights retained)
+## Stage 01 task accounting
 
-| Task | Weight in Stage 01 | 01A reality |
+| Task | Weight | 01B state |
 |---|---:|---|
-| S01.01 Git/scaffold/MATLAB Project | 10 | PARTIAL: scaffold built, MATLAB `.prj` ungenerated; no runtime |
-| S01.02 Architecture/contracts/API spec/ADR | 15 | IMPLEMENTED and statically reviewed |
-| S01.03 Model facade | 15 | NOT STARTED (01B) |
-| S01.04 Input validation | 10 | NOT STARTED (01B) |
-| S01.05 DOF mapper | 10 | NOT STARTED (01C) |
-| S01.06 Dirichlet solver | 15 | NOT STARTED (01C) |
-| S01.07 Test suite | 15 | PARTIAL: 01A smoke/metadata tests authored, not MATLAB-run |
-| S01.08 Setup/examples/test runner | 5 | PARTIAL: authored, not MATLAB-run |
-| S01.09 Documentation/QA/release report | 5 | PARTIAL: ongoing through Stage 01 |
+| S01.01 repository/MATLAB Project | 10 | Partial; user reports setup complete, author has no `.prj`/test log |
+| S01.02 architecture/contracts/API/ADR | 15 | Implemented and accepted by docs-only static review |
+| S01.03 Model facade | 15 | Implemented; **MATLAB tests NOT_RUN** |
+| S01.04 model validation | 10 | Implemented; **MATLAB tests NOT_RUN** |
+| S01.05 DOF mapper | 10 | Planned 01C |
+| S01.06 Dirichlet solver proof | 15 | Planned 01C |
+| S01.07 unit, negative, regression tests | 15 | Test files expanded; entire task unaccepted pending MATLAB test execution and future tests |
+| S01.08 scripts/examples runner | 5 | Expanded; task pending complete Stage 01 acceptance |
+| S01.09 documentation/QA release gate | 5 | In progress, not accepted |
 
-## Progress rule
-
-Stage task points only count when an entire task is accepted, not when files are present. Overall implementation/verification uses stage weight times accepted task weight divided by total stage task weight; `docs/progress.json` lists flags and evidence. Documentation can receive static-review verification; MATLAB numerical tasks require actual MATLAB evidence.
-
-**Current execution boundary:** 01A delivered. **Next, on user instruction only:** `PROMPTS/01B_PUBLIC_MODEL_FACADE_AND_VALIDATION.md`.
+**Weighted status:** Stage 01 implemented 40%, verified 15%; whole project implemented 3.2%, verified 1.2%. Matlab installed on user's workstation does not constitute recorded executed evidence in this authoring environment. Next executable prompt (only on command): `01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md`.

@@ -1,33 +1,50 @@
-# Handoff — ArkaFEM 01A → 01B
+# Handoff — 01B → 01C (patch delivery)
 
-**Latest complete-source artifact**: `ArkaFEM_01A_0.0.1-dev.zip` (root `ArkaFEM/`), source manifests in `docs/FILE_MANIFEST.sha256`. The original supplied kit is also embedded under `spec/`.
+## Baseline and applied delta
 
-## What exists and how to run it
+**Base:** `ArkaFEM_01A_0.0.1-dev.zip` containing `ArkaFEM/`. **01B output:** ZIP **with only files added or modified relative to that baseline**, all paths prefixed `ArkaFEM/` so extraction to the **parent** repository folder overlays correct locations. Its top-level `PATCH_INFO.json` lists additions/changes/deletions with SHA-256. No file deletions in 01B. Preserve the user's own `.git`, `.prj`, MATLAB Project metadata, and workspace changes. The original prompt-kit rule of a full ZIP is superseded by explicit user request for patch-based delivery.
 
-- `src/+arka/version.m`: only actual callable public source function so far (MATLAB untested).
-- `scripts/setupArkaFEM.m`: adds only package parent `src` to MATLAB path; idempotent design.
-- `scripts/smokeArkaFEM.m`, `examples/example_00_version.m`, `tests/unit/TestBootstrap.m`: authored but NOT_RUN in MATLAB.
-- `Makefile`: explicit Git helpers, Python static lint, real MATLAB-dependent smoke/Code Analyzer/tests and `verify`; MATLAB absence causes errors.
-- `docs/ARCHITECTURE.md`, `docs/NUMERICAL_CONTRACTS.md`, `docs/API_SPEC.md`, `docs/ROADMAP.md`, ADR-0001; `docs/progress.json` is the machine-readable progress record.
-- `.github/workflows/static.yml`: configured static-only GitHub action, remote run not observed.
+## New authored capability
 
-## What was NOT done
+- `src/+arka/Model.m`: 2D/3D Truss/Frame data-only model, node/material/general-section records, revisioned atomic inserts, queries/sorted lists/snapshots/summary/integrity check.
+- `src/+arka/+internal/+core/*`: validation helpers and strict name/value parser; `G = E/[2(1+nu)]` consistency check.
+- `tests/unit/TestModelRegistry.m`, `tests/negative/TestModelValidation.m`, `examples/example_01_model_basics.m`.
+- `docs/API_SPEC.md`, `docs/model_data.md`, `docs/theory/isotropic_material_registry.md`, `docs/benchmarks/model_validation.md`.
 
-- MATLAB and Octave were not available; no MATLAB syntax, smoke, Code Analyzer or unit-test run occurred.
-- No valid `.prj` was manufactured or verified; S01.01 remains partial.
-- No `arka.Model`, materials, sections, DOF manager, solver, structural example, numerical benchmark or full model facade exists.
-- No permission to use MIT was inferred. No Git commit/push/tag took place.
+## What is unavailable / not proved
 
-## Next prompt (ONLY on explicit instruction)
+- No element APIs, DOF mapping, Dirichlet partition, spring element, mesh assembly, FEM solver, results or meaningful structural stress/deflection.
+- No actual MATLAB runtime available inside the source-authoring environment; tests authored but execution `NOT_RUN`. User reported installing MATLAB and configuring the repo but did not provide a log for external acceptance. Neither R2024b+ compatibility nor published QA is certified.
+- No Git operations have been executed on the user's repository; no license was chosen.
 
-`spec/ArkaFEM_PromptKit_v2/PROMPTS/01B_PUBLIC_MODEL_FACADE_AND_VALIDATION.md` — implement provisional validated public Model data facade. Consult all contracts and preserve existing files; do not leap ahead to DOF mapping or solver. Keep MATLAB test status NOT_RUN unless executed.
+## Apply and test
 
-## Remaining 01A blockers to revisit
+```powershell
+cd C:\Projects\ArkaFEM
+git status --short
+# Extract the ZIP into C:\Projects (not C:\Projects\ArkaFEM).
+Expand-Archive -Path '<actual-downloaded-01B-patch.zip>' -DestinationPath 'C:\Projects' -Force
+cd C:\Projects\ArkaFEM
+```
 
-1. Generate and test actual MATLAB Project in a licensed MATLAB environment (`docs/MATLAB_PROJECT.md`).
-2. Run setup/smoke/unit/Code Analyzer in target R2024b+; record full logs.
-3. Obtain owner license choice before public publishing.
+```matlab
+cd('C:\Projects\ArkaFEM')
+run(fullfile(pwd, 'scripts', 'setupArkaFEM.m'))
+run(fullfile(pwd, 'examples', 'example_01_model_basics.m'))
+run(fullfile(pwd, 'scripts', 'run_all_tests.m'))
+run(fullfile(pwd, 'scripts', 'run_lint.m'))
+```
 
-## Suggested Git commit (user-controlled)
+Suggested commit **by user**, after review and QA:
 
-`chore: bootstrap ArkaFEM MATLAB package and QA contracts`
+```powershell
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git commit -m "feat: add validated ArkaFEM model facade (01B)"
+git push origin main
+```
+
+## Next execution boundary
+
+Only on explicit instruction, read `spec/ArkaFEM_PromptKit_v2/PROMPTS/01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md`. Stage 01C will map deterministic active-family DOFs and solve a **manually assembled** Dirichlet spring chain. Do not claim general FEM assembly and do not skip the MATLAB QA gate.

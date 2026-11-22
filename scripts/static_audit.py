@@ -13,6 +13,17 @@ REQUIRED = [
     'scripts/smokeArkaFEM.m', 'scripts/run_all_tests.m',
     'scripts/run_lint.m', 'scripts/static_audit.py',
     'tests/unit/TestBootstrap.m', 'examples/example_00_version.m',
+    'src/+arka/Model.m', 'src/+arka/+internal/+core/validateNode.m',
+    'src/+arka/+internal/+core/validateMaterial.m',
+    'src/+arka/+internal/+core/validateSection.m',
+    'src/+arka/+internal/+core/validateId.m',
+    'src/+arka/+internal/+core/validateName.m',
+    'src/+arka/+internal/+core/validateScalar.m',
+    'src/+arka/+internal/+core/parseOptions.m',
+    'tests/unit/TestModelRegistry.m', 'tests/negative/TestModelValidation.m',
+    'examples/example_01_model_basics.m', 'docs/model_data.md',
+    'docs/theory/isotropic_material_registry.md',
+    'docs/benchmarks/model_validation.md', 'docs/qa/01B_REPORT.md',
     'docs/ARCHITECTURE.md', 'docs/NUMERICAL_CONTRACTS.md',
     'docs/API_SPEC.md', 'docs/ROADMAP.md', 'docs/STATUS.md',
     'docs/HANDOFF.md', 'docs/adr/0001-foundation.md',
@@ -29,6 +40,12 @@ def check():
     matlab = (ROOT / 'src/+arka/version.m').read_text(encoding='utf-8')
     if f'info.Version = "{version}"' not in matlab:
         issues.append('VERSION and MATLAB metadata disagree')
+    model = (ROOT / 'src/+arka/Model.m').read_text(encoding='utf-8')
+    for method in ('addNode', 'addMaterial', 'addSection', 'getNode',
+                   'getMaterial', 'getSection', 'listNodes', 'listMaterials',
+                   'listSections', 'summary', 'validate', 'snapshot'):
+        if not re.search(r'function\s+[^\n]*\b'+method+r'\s*\(', model):
+            issues.append(f'missing Model method: {method}')
     setup = (ROOT / 'scripts/setupArkaFEM.m').read_text(encoding='utf-8')
     if 'addpath(arkaSetupSrcDirectory' not in setup or re.search(r'addpath\s*\(\s*genpath', setup):
         issues.append('setup must add only src and never recursive genpath')
