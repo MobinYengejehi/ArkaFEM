@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Static repository contract checks, NOT a MATLAB syntax or numerical test."""
 from pathlib import Path
-import hashlib
 import json
 import re
 import sys
@@ -24,6 +23,14 @@ REQUIRED = [
     'examples/example_01_model_basics.m', 'docs/model_data.md',
     'docs/theory/isotropic_material_registry.md',
     'docs/benchmarks/model_validation.md', 'docs/qa/01B_REPORT.md',
+    'src/+arka/dofMap.m', 'src/+arka/dofIndex.m',
+    'src/+arka/solveDirichlet.m', 'src/+arka/+internal/+core/buildDofMap.m',
+    'src/+arka/+internal/+numerics/solveDirichlet.m',
+    'tests/unit/TestDofMapping.m', 'tests/negative/TestDofSolverValidation.m',
+    'tests/benchmarks/TestManualSpringChain.m',
+    'examples/example_02_spring_system.m',
+    'docs/theory/dof_mapping.md', 'docs/theory/dirichlet_partition.md',
+    'docs/benchmarks/manual_spring_chain.md', 'docs/qa/01C_REPORT.md',
     'docs/ARCHITECTURE.md', 'docs/NUMERICAL_CONTRACTS.md',
     'docs/API_SPEC.md', 'docs/ROADMAP.md', 'docs/STATUS.md',
     'docs/HANDOFF.md', 'docs/adr/0001-foundation.md',
@@ -61,12 +68,23 @@ def check():
     except (ValueError, KeyError, TypeError, OSError) as ex:
         issues.append(f'invalid progress.json: {ex}')
     bad_whitespace = []
+    damaged_matlab = []
     for directory in ['src', 'scripts', 'tests', 'examples']:
         for f in (ROOT / directory).rglob('*'):
             if f.is_file() and f.suffix in {'.m', '.py'}:
                 blob = f.read_bytes()
+                if f.suffix == '.m':
+                    # ArkaFEM MATLAB sources use printable ASCII and LF/tab.
+                    # Reject escaped Markdown operators and HTML entities.
+                    # A single left-division backslash remains valid.
+                    if (any(b not in (9, 10, 13) and not 32 <= b <= 126
+                            for b in blob) or
+                            re.search(rb'\\[~*]|&(?:#[0-9]+|#x[0-9a-fA-F]+|nbsp|lt|gt|amp|quot);', blob)):
+                        damaged_matlab.append(str(f.relative_to(ROOT)))
                 if not blob.endswith(b'\n') or b'\r\n' in blob:
                     bad_whitespace.append(str(f.relative_to(ROOT)))
+    if damaged_matlab:
+        issues.append('MATLAB text corruption: ' + ', '.join(damaged_matlab))
     if bad_whitespace:
         issues.append('file newline convention: ' + ', '.join(bad_whitespace))
     for issue in issues:

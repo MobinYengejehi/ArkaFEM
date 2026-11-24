@@ -1,50 +1,53 @@
-# Handoff — 01B → 01C (patch delivery)
+# Handoff — Stage 01C → Stage 01D (incremental patch)
 
-## Baseline and applied delta
+## Inputs and delta conventions
 
-**Base:** `ArkaFEM_01A_0.0.1-dev.zip` containing `ArkaFEM/`. **01B output:** ZIP **with only files added or modified relative to that baseline**, all paths prefixed `ArkaFEM/` so extraction to the **parent** repository folder overlays correct locations. Its top-level `PATCH_INFO.json` lists additions/changes/deletions with SHA-256. No file deletions in 01B. Preserve the user's own `.git`, `.prj`, MATLAB Project metadata, and workspace changes. The original prompt-kit rule of a full ZIP is superseded by explicit user request for patch-based delivery.
+GitHub authoritative baseline is `MobinYengejehi/ArkaFEM` main at `1cc07e72619457ade19fc53ea8a75190bcd7fe8c`. The local working snapshot was reconstructed from the original Stage 01A, Stage 01B and 01B hotfix archives; critical Git object hashes were compared to the live repository. The GitHub README differs in whitespace formatting, but this file is intentionally rewritten for Stage 01C. This 01C output contains **only added/modified ArkaFEM paths**, with `PATCH_INFO.json` enumerating additions, replacements, deletions and SHA-256. Extract **into the parent directory** of `ArkaFEM/`, for example `P:\projects\ArkaFEM`, and only after ensuring the 01B stage was applied. The user's `.git`, MATLAB `.prj`, tool settings and extra local files are not included/removed. Verify the existing baseline and review local Git diff before overlay.
 
-## New authored capability
+## Reviewed replacement patch
 
-- `src/+arka/Model.m`: 2D/3D Truss/Frame data-only model, node/material/general-section records, revisioned atomic inserts, queries/sorted lists/snapshots/summary/integrity check.
-- `src/+arka/+internal/+core/*`: validation helpers and strict name/value parser; `G = E/[2(1+nu)]` consistency check.
-- `tests/unit/TestModelRegistry.m`, `tests/negative/TestModelValidation.m`, `examples/example_01_model_basics.m`.
-- `docs/API_SPEC.md`, `docs/model_data.md`, `docs/theory/isotropic_material_registry.md`, `docs/benchmarks/model_validation.md`.
+Use `ArkaFEM_01C_GITHUB_BASED_REVIEWED_PATCH.zip` instead of the earlier 01C ZIP. It also overlays an already extracted 01C patch. The baseline remains unchanged. Static audit now checks MATLAB source bytes and escaped operators; MATLAB runtime is still required.
 
-## What is unavailable / not proved
+## Authored API and design boundaries
 
-- No element APIs, DOF mapping, Dirichlet partition, spring element, mesh assembly, FEM solver, results or meaningful structural stress/deflection.
-- No actual MATLAB runtime available inside the source-authoring environment; tests authored but execution `NOT_RUN`. User reported installing MATLAB and configuring the repo but did not provide a log for external acceptance. Neither R2024b+ compatibility nor published QA is certified.
-- No Git operations have been executed on the user's repository; no license was chosen.
+- Public `arka.dofMap`, `arka.dofIndex` and internal pure `arka.internal.core.buildDofMap` canonical node ID/DOF family mapping. `arka.Model` only supports `2D`/`3D`; 1D mapping is possible using explicit node IDs/family.
+- Public `arka.solveDirichlet` wraps the pure numerical `arka.internal.numerics.solveDirichlet` accepting **manual K/F**, sorting constraints, validating finite data, rejecting duplicates/conflicts/singular and severely ill-conditioned free systems; reconstructs `R=KU-F`, computes normalized residual.
+- No automatic elements, mesh, multipoint constraints, loads, full Model solver, `arka.Results` or GUI. `arka.version().Stage` is `01C`.
+- Documentation added: DOF and Dirichlet theory + independently hand-derived spring-chain benchmark. New MATLAB positive/negative tests provided.
 
-## Apply and test
+## QA and recovery
 
-```powershell
-cd C:\Projects\ArkaFEM
-git status --short
-# Extract the ZIP into C:\Projects (not C:\Projects\ArkaFEM).
-Expand-Archive -Path '<actual-downloaded-01B-patch.zip>' -DestinationPath 'C:\Projects' -Force
-cd C:\Projects\ArkaFEM
-```
+Environment where code was authored has **no MATLAB**; all MATLAB tests and Code Analyzer remain `NOT_RUN` here. Do not upgrade S01.05 or S01.06 to verified until actual MATLAB test output and release are supplied. Static audit/ZIP+manifest source integrity are independent of actual MATLAB execution.
+
+Run locally from repo root:
 
 ```matlab
-cd('C:\Projects\ArkaFEM')
-run(fullfile(pwd, 'scripts', 'setupArkaFEM.m'))
-run(fullfile(pwd, 'examples', 'example_01_model_basics.m'))
-run(fullfile(pwd, 'scripts', 'run_all_tests.m'))
-run(fullfile(pwd, 'scripts', 'run_lint.m'))
+run(fullfile(pwd,'scripts','setupArkaFEM.m'));
+run(fullfile(pwd,'examples','example_02_spring_system.m'));
+run(fullfile(pwd,'scripts','run_all_tests.m'));
+run(fullfile(pwd,'scripts','run_lint.m'));
 ```
 
-Suggested commit **by user**, after review and QA:
+On Windows PowerShell with MATLAB on PATH:
 
 ```powershell
-git add -A
-git diff --cached --check
-git diff --cached --stat
-git commit -m "feat: add validated ArkaFEM model facade (01B)"
-git push origin main
+cd P:\projects\ArkaFEM\ArkaFEM
+matlab -batch "run(fullfile(pwd,'examples','example_02_spring_system.m')); run(fullfile(pwd,'scripts','run_all_tests.m'))"
 ```
 
-## Next execution boundary
+For manifest on a working tree containing additional MATLAB Project metadata:
 
-Only on explicit instruction, read `spec/ArkaFEM_PromptKit_v2/PROMPTS/01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md`. Stage 01C will map deterministic active-family DOFs and solve a **manually assembled** Dirichlet spring chain. Do not claim general FEM assembly and do not skip the MATLAB QA gate.
+```powershell
+python scripts/check_manifest.py --allow-unlisted
+python scripts/static_audit.py
+```
+
+## Stage 01D contract
+
+Stage 01D must review all S01.01–S01.09 tasks, target tests/lint real execution and clean-source setup. Do not claim Stage 01 gate accepted based solely on Python/static checks. Include user-generated MATLAB `.prj` only via explicit user-provided source/evidence; do not erase it via patch. Maintain source/document lineage and stage01 weight accounting. No commits/pushes/tags without user instruction.
+
+**Next exact prompt:** `spec/ArkaFEM_PromptKit_v2/PROMPTS/01D_TESTS_FINALIZE_AND_STAGE01_GATE.md`.
+
+## Base-commit safeguard
+
+The patch is based on `1cc07e72619457ade19fc53ea8a75190bcd7fe8c`. Review `git rev-parse HEAD` and require a clean working tree before extraction. No automated GitHub commit/push was made; existing `src/+arka/Model.m` and local MATLAB Project files stay untouched.

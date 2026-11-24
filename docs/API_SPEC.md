@@ -1,4 +1,4 @@
-# ArkaFEM public API — Stage 01B (provisional data-only facade)
+# ArkaFEM public API — Stage 01C (provisional model registry + numerical proof)
 
 The main MATLAB compatibility target is **R2024b+**, not yet verified by an observed MATLAB run in the authoring environment. Add only `<repo>/src` to the MATLAB path. No additional toolbox dependency is intentionally introduced.
 
@@ -50,10 +50,37 @@ Names are trimmed, case-sensitive, nonempty string scalars or character vectors.
 | `arka:validation:MissingReference` | Referenced material/section is not found |
 | `arka:validation:UnknownRecord` | Node ID not found |
 
-## Not callable in 01B
+## New working-API surface authored in 01C
 
-`addTruss`, `addFrame`, `addNodalLoad`, `fixNode`, `solveStatic`, `plotDeformed`, `arka.Results`, automatic DOF mapping, sparse assembly, and numerical FEM solver **do not exist**. Node and section registries are for data only. Do not call the above as if they were functional APIs.
+```matlab
+map = arka.dofMap([10 1 5], "1D");
+idx = arka.dofIndex(map, 10, "UX");  % index 3
+m = arka.Model("2D", "Frame");
+m.addNode(12, [1 0]); m.addNode(2, [0 0]);
+map2 = arka.dofMap(m);                % labels UX UY RZ; ascending node IDs
+K = sparse([1e6 -1e6 0; -1e6 3e6 -2e6; 0 -2e6 2e6]);
+F = [0; 0; 3000];
+r = arka.solveDirichlet(K,F,1,0);  % manual stiffness K/F only
+% r.Displacements = [0;.003;.0045] m (expected)
+% r.SupportReactions = -3000 N (expected)
+```
+
+`arka.dofMap` accepts exactly `dofMap(model)` (2D/3D Truss/Frame) or `dofMap(nodeIds, family)` with `family` in {`1D`,`2DTruss`,`2DFrame`,`3DTruss`,`3DFrame`}. Output: `Space,Family,NodeIds,Labels,Indices,DofsPerNode,TotalDofs,ModelRevision,Units`; `arka.dofIndex` queries that map and raises for absent nodes or inactive DOFs. Mixed-family unions are not implemented. A model edit after mapping invalidates the old revision snapshot.
+
+`arka.solveDirichlet(K,F,c,uc)` is **pure** and requires a manually assembled N×N double stiffness matrix, N×1 full double F, and matched vectors of constrained 1-based indices / prescribed displacements (supports nonzero settlement). Returns `Displacements,Reactions,FreeDofs,ConstrainedDofs,PrescribedValues,FreeResidual,SupportReactions,NormalizedFreeResidual,ConditionEstimate,TotalDofs,FreeDofCount,NNZ,Solver,Units`. Sparse partition `Kff \ (Ff-Kfc*Uc)` is used. The condition check rejects >=1e12; normalised residual criterion is 1e-8. Those are conservative prototype safeguards; see theory notes. No automatic element assembly is provided.
+
+The solver wrapper checks argument count. `dofIndex` checks map field presence, types, shape and the queried canonical index; reduced arithmetic overflow is rejected.
+
+New diagnostic IDs: `arka:validation:InvalidDof`, `arka:solver:InvalidMatrix`, `arka:solver:InvalidVector`, `arka:solver:InvalidConstraint`, `arka:solver:NonFiniteData`, `arka:solver:ConflictingConstraint`, `arka:solver:DuplicateConstraint`, `arka:solver:SingularSystem`, `arka:solver:IllConditionedSystem`, `arka:solver:ConditionEstimateFailed`, `arka:solver:NonFiniteSolution`, `arka:solver:ResidualTooLarge`.
+
+## Not callable in 01C
+
+`addTruss`, `addFrame`, `addNodalLoad`, `fixNode`, `solveStatic`, `plotDeformed`, `arka.Results`, automatic **element assembly**, model-based FEM solution and element force recovery **do not exist**. Node and section registries are for data only. Do not call the above as if they were functional APIs.
 
 ## Changes from Stage 01A (development API, no compatibility guarantee)
 
-`arka.version().Stage` is now `"01B"`; `AvailableAPI` is now a string array enumerating the available calls instead of the former single string `"arka.version"`. `Version` remains `0.0.1-dev`; MATLAB verification flag stays false until documented tests establish compatibility. No settled public stable API or released Matlab Toolbox yet.
+`arka.version().Stage` was `"01B"` in Stage 01B; `AvailableAPI` is now a string array enumerating the available calls instead of the former single string `"arka.version"`. `Version` remains `0.0.1-dev`; MATLAB verification flag stays false until documented tests establish compatibility. No settled public stable API or released Matlab Toolbox yet.
+
+## 01C transition
+
+`arka.version().Stage` is `"01C"`, `Version` remains `0.0.1-dev`; MATLAB runtime validation still **NOT_RUN** in the authoring environment. See `docs/qa/01C_REPORT.md`.

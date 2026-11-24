@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.0.1-dev] — 2026-11-24 (01C review, unpublished)
+
+- Rechecked the raw ZIP MATLAB sources; no escaped Markdown operators or non-ASCII bytes were found in the original archive.
+- Hardened solver argument and finite arithmetic checks, and DOF map query validation. Added five MATLAB regression tests.
+- Added MATLAB source text-integrity checks to the static audit. MATLAB execution and Code Analyzer remain NOT_RUN.
+
+## [0.0.1-dev] — 2026-11-20 (01C, unpublished)
+
+### Added
+- Public `arka.dofMap` (one family at a time) and `arka.dofIndex`; pure internal deterministic 1-based builder sorted by node ID.
+- Public `arka.solveDirichlet` as a convenience wrapper over a pure numerical partitioned sparse solver with nonzero prescribed displacements and reactions `K*U-F`.
+- Positive, benchmark and negative MATLAB tests (NOT_RUN in authoring environment); documented spring-chain benchmark, theory and running example.
+
+### Changed
+- `arka.version().Stage` to `01C`, expanded `AvailableAPI`; version remains `0.0.1-dev`.
+- Static audit contracts, progress, API/roadmap, QA, handoff and SHA-256 source manifest.
+
+### Limitations
+- This is a manual supplied-K,F numerical proof, **not** FEM assembly or `Model.solveStatic`. MATLAB runtime and Code Analyzer not executed in authoring environment.
+
 ## [0.0.1-dev] — 2026-11-20 (01B, unpublished)
 
 ### Added

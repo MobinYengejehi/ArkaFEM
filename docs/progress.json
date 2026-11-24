@@ -1,10 +1,10 @@
 {
   "project": "ArkaFEM",
   "schema_version": 2,
-  "as_of_utc": "2026-11-20",
+  "as_of_utc": "2026-11-24",
   "version": "0.0.1-dev",
   "current_stage": "01",
-  "current_step": "01B",
+  "current_step": "01C",
   "baseline_prompt_kit_sha256": "de67866ad9fd28d1094a198fda995af9db8425a76dd06518bc4a34693eae1e2c",
   "stage_weights_pct": {
     "01": 8,
@@ -37,33 +37,33 @@
       "id": "S01.03",
       "weight": 15,
       "implemented_accepted": true,
-      "verified_accepted": false,
-      "verification_basis": "source/static review only; MATLAB regression and negative tests NOT_RUN",
-      "notes": "Stage 01B Model registry, lookup/list, revisions and defensive snapshots implemented"
+      "verified_accepted": true,
+      "verification_basis": "User-provided MATLAB transcript: 25/25 01B tests passed; user later confirmed completion of final Code Analyzer hotfix; author did not rerun.",
+      "notes": "Stage 01B Model registry, lookup/list, revisions and defensive snapshots implemented; user-confirmed 01B runtime verification"
     },
     {
       "id": "S01.04",
       "weight": 10,
       "implemented_accepted": true,
-      "verified_accepted": false,
-      "verification_basis": "source/static review only; MATLAB regression and negative tests NOT_RUN",
-      "notes": "Stage 01B strict validators and stable error IDs implemented; MATLAB test suite authored, not executed"
+      "verified_accepted": true,
+      "verification_basis": "User-provided MATLAB transcript: 25/25 01B tests passed; user later confirmed completion of final Code Analyzer hotfix; author did not rerun.",
+      "notes": "Stage 01B strict validators and stable error IDs implemented; MATLAB test suite authored, not executed; user-confirmed 01B runtime verification"
     },
     {
       "id": "S01.05",
       "weight": 10,
-      "implemented_accepted": false,
+      "implemented_accepted": true,
       "verified_accepted": false,
-      "verification_basis": null,
-      "notes": "not started at 01A"
+      "verification_basis": "Static source inspection only; MATLAB 01C NOT_RUN",
+      "notes": "Family-specific deterministic DOF mapper; 5 families, one family per map; missing/inactive DOFs rejected"
     },
     {
       "id": "S01.06",
       "weight": 15,
-      "implemented_accepted": false,
+      "implemented_accepted": true,
       "verified_accepted": false,
-      "verification_basis": null,
-      "notes": "not started at 01A"
+      "verification_basis": "Static audit + independent Python numerical cross-check; MATLAB 01C NOT_RUN",
+      "notes": "Pure Dirichlet Kff partition solver with nonzero settlement, reactions, singular/ill conditioned checks"
     },
     {
       "id": "S01.07",
@@ -71,7 +71,7 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "01A tests plus new 01B positive/negative MATLAB tests authored; MATLAB NOT_RUN, 01C/01D test coverage pending"
+      "notes": "Tests for 01A\u201301C authored; 01B user observed 25/25 PASS; 01C new MATLAB tests NOT_RUN; full 01D final gate pending."
     },
     {
       "id": "S01.08",
@@ -79,7 +79,7 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "setup/smoke/runner + 01B model basics example authored; MATLAB not executed in authoring environment"
+      "notes": "Local examples and setup prepared; Stage 01B user confirmed, Stage 01C runtime pending."
     },
     {
       "id": "S01.09",
@@ -87,26 +87,27 @@
       "implemented_accepted": false,
       "verified_accepted": false,
       "verification_basis": null,
-      "notes": "QA and patch-only reporting updated; final Stage01 gate and MATLAB evidence pending"
+      "notes": "Documentation, QA, manifest and patch metadata updated; Stage 01 final gate pending."
     }
   ],
   "stage01": {
-    "implemented_pct": 40,
-    "verified_pct": 15,
-    "remaining_verified_pct": 85
+    "implemented_pct": 65,
+    "verified_pct": 40,
+    "remaining_verified_pct": 60
   },
   "overall": {
-    "implemented_pct": 3.2,
-    "verified_pct": 1.2,
-    "remaining_verified_pct": 98.8
+    "implemented_pct": 5.2,
+    "verified_pct": 3.2,
+    "remaining_verified_pct": 96.8
   },
   "runtime": {
     "MATLAB": "USER_REPORTS_INSTALLED; NOT_AVAILABLE_TO_AUTHOR",
-    "MATLAB_tests": "NOT_RUN",
-    "Code_Analyzer": "NOT_RUN",
-    "MATLAB_Project": "USER_REPORTED_CREATED; NOT_OBSERVED"
+    "MATLAB_tests": "01B user reported 25/25 PASS; 01C reviewed patch: 21 new tests authored, NOT_RUN",
+    "Code_Analyzer": "01B final fix user confirmed; 01C NOT_RUN",
+    "MATLAB_Project": "USER_REPORTED_CREATED; NOT_OBSERVED",
+    "GitHub_baseline_commit": "1cc07e72619457ade19fc53ea8a75190bcd7fe8c"
   },
-  "next_prompt": "PROMPTS/01C_DOF_MAPPING_AND_DIRICHLET_SOLVER_PROOF.md",
+  "next_prompt": "PROMPTS/01D_TESTS_FINALIZE_AND_STAGE01_GATE.md",
   "progress_method": "S01.01..09: accept whole weighted tasks only; overall progress = 8 * task_points /100. Docs-only verification may use static review; MATLAB-dependent verification requires MATLAB execution.",
   "delivery_mode": "PATCH_ONLY_PER_USER_OVERRIDE"
 }

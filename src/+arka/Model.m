@@ -7,6 +7,7 @@ classdef Model < handle
     %   Only <repository>/src must be added to the MATLAB path.
     %   Registries are private and all query/snapshot outputs are value
     %   structs, not handles to internal mutable state.
+    
     properties (SetAccess = private)
         Space
         Family
